@@ -18,7 +18,7 @@ logs and metrics. You can create the following types of sink resources:
 
 Before creating a sink resource, do the following:
 
-* If you want to create a `ClusterSink` or `Sink` resource, ensure that the **Enable Log Sink Resources** checkbox is selected in the <%= vars.product_tile %> tile.
+* If you want to create a `ClusterLogSink` or `LogSink` resource, ensure that the **Enable Log Sink Resources** checkbox is selected in the <%= vars.product_tile %> tile.
 * If you want to create a `ClusterMetricSink` resource, ensure that the **Enable Metric Sink Resources** checkbox is selected in the <%= vars.product_tile %> tile.
 
 For more information, see the _Logging_ section of the <%= vars.product_short %> installation topic
@@ -34,7 +34,7 @@ for your IaaS:
 
 To create and manage sink resources, you must install the Kubernetes CLI, <code>kubectl</code>. 
 
-Alternately, to manage `ClusterSink` resources with the PKS CLI, you must use PKS CLI v1.3 or later.
+Alternately, to manage `ClusterLogSink` resources with the PKS CLI, you must use PKS CLI v1.3 or later.
 
 For installation instructions, see <a href="installing-kubectl-cli.html">Installing the Kubernetes CLI</a> 
 and <a href="installing-pks-cli.html">Installing the PKS CLI</a>.
@@ -43,31 +43,31 @@ and <a href="installing-pks-cli.html">Installing the PKS CLI</a>.
 
 You can create log sinks for clusters and namespaces and metric sinks for clusters.
 
-* If you want to create a `ClusterSink`, see
-[ClusterSink Resources](#define-cluster-sink).
-* If you want to create a `Sink`, see
-[Sink Resources](#define-namespace-sink).
+* If you want to create a `ClusterLogSink`, see
+[ClusterLogSink Resources](#define-cluster-sink).
+* If you want to create a `LogSink`, see
+[LogSink Resources](#define-namespace-sink).
 * If you want to create a `ClusterMetricSink`, see
 [ClusterMetricSink Resources](#define-metric-sink).
 
 <p class="note"><strong>Note:</strong> Log sinks created in <%= vars.product_short %> do not support UDP connections.</p>
 
-### <a id='define-cluster-sink'></a>ClusterSink Resources
+### <a id='define-cluster-sink'></a>ClusterLogSink Resources
 
-`ClusterSink` resources enable you to capture logs from your clusters.
+`ClusterLogSink` resources enable you to capture logs from your clusters.
 
-To create and manage `ClusterSink` resources, you can:
+To create and manage `ClusterLogSink` resources, you can:
 
-* [Create ClusterSink Resource with the PKS CLI](#cluster-sink-pks)
-* [Create a Syslog ClusterSink Resource with YAML and kubectl](#syslog-cluster-sink)
-* [Create a Webhook ClusterSink Resource with YAML and kubectl](#webhook-cluster-sink)
+* [Create ClusterLogSink Resource with the PKS CLI](#cluster-sink-pks)
+* [Create a Syslog ClusterLogSink Resource with YAML and kubectl](#syslog-cluster-sink)
+* [Create a Webhook ClusterLogSink Resource with YAML and kubectl](#webhook-cluster-sink)
 
-#### <a id='cluster-sink-pks'></a> Create ClusterSink Resource with the PKS CLI
+#### <a id='cluster-sink-pks'></a> Create ClusterLogSink Resource with the PKS CLI
 
 To create and apply a log sink to a cluster, run the following command:
 
 ```
-pks create-sink CLUSTER-NAME \
+pks create-logsink CLUSTER-NAME \
 syslog-tls://YOUR-LOG-DESTINATION:YOUR-LOG-DESTINATION-PORT
 ```
 Where:
@@ -79,44 +79,44 @@ Where:
 For example:
 
 <pre class="terminal">
-$ pks create-sink my-cluster syslog-tls://example.com:12345
+$ pks create-logsink my-cluster syslog-tls://example.com:12345
 </pre>
 
 If you do not specify a name, the command creates 
-a sink resource in the cluster that shares the same name as the cluster.
+a log sink resource in the cluster that shares the same name as the cluster.
 
-To provide a name for the sink resources in your cluster, run the following command. 
+To provide a name for the log sink resources in your cluster, run the following command. 
 
 ```
-pks create-sink CLUSTER-NAME --name YOUR-SINK \
+pks create-logsink CLUSTER-NAME --name YOUR-SINK \
 syslog-tls://YOUR-LOG-DESTINATION:YOUR-LOG-DESTINATION-PORT
 ```
 Where:
 
 * `CLUSTER-NAME` is the name of your cluster.
-* `YOUR-SINK` is the name of the sink you want to create.
+* `YOUR-SINK` is the name of the log sink you want to create.
 * `YOUR-LOG-DESTINATION` is the URL or IP address of your log management service.
 * `YOUR-LOG-DESTINATION-PORT` is the port number of your log management service.
 
 For example:
 
 <pre class="terminal">
-$ pks create-sink my-cluster --name second-sink syslog-tls://example.org:54321
+$ pks create-logsink my-cluster --name second-sink syslog-tls://example.org:54321
 </pre>
 
-Specifying a name is useful if you need to manage multiple sink resources in your cluster.
+Specifying a name is useful if you need to manage multiple log sink resources in your cluster.
 
-#### <a id='syslog-cluster-sink'></a> Create a Syslog ClusterSink Resource with YAML and kubectl
+#### <a id='syslog-cluster-sink'></a> Create a Syslog ClusterLogSink Resource with YAML and kubectl
 
-A syslog `ClusterSink` resource delivers logs using the TCP-based syslog protocol.
+A syslog `ClusterLogSink` resource delivers logs using the TCP-based syslog protocol.
 
-To define a syslog `ClusterSink` resource with YAML and `kubectl`, perform the following steps:
+To define a syslog `ClusterLogSink` resource with YAML and `kubectl`, perform the following steps:
 
 1. Create a YAML file that specifies your log destination in the following format:
   
     ```
-    apiVersion: apps.pivotal.io/v1beta1
-    kind: ClusterSink
+    apiVersion: pksapi.io/v1beta1
+    kind: ClusterLogSink
     metadata:
        name: YOUR-SINK-NAME
     spec:
@@ -130,9 +130,11 @@ To define a syslog `ClusterSink` resource with YAML and `kubectl`, perform the f
     * `YOUR-LOG-DESTINATION` is the URL or IP address of your log management service.
     * `YOUR-LOG-DESTINATION-PORT` is the port number of your log management service.
 
+  <p class="note"><strong>Note:</strong> <code>enable_tls</code> must be <code>true</code>.</p>
+
 1. Save the YAML file with an appropriate file name. For example, `my-cluster-sink.yml`.
 
-1. Apply the `ClusterSink` resource to your cluster by running the following command:
+1. Apply the `ClusterLogSink` resource to your cluster by running the following command:
 
     ```
     kubectl apply -f MY-SINK.yml
@@ -143,17 +145,17 @@ To define a syslog `ClusterSink` resource with YAML and `kubectl`, perform the f
     $ kubectl apply -f my-cluster-sink.yml
     </pre>
 
-#### <a id='webhook-cluster-sink'></a> Create a Webhook ClusterSink Resource with YAML and kubectl
+#### <a id='webhook-cluster-sink'></a> Create a Webhook ClusterLogSink Resource with YAML and kubectl
 
-A webhook `ClusterSink` resource batches logs into 1 second units, wraps the resulting payload in JSON, and uses the POST method to deliver the logs to the address of your log management service.
+A webhook `ClusterLogSink` resource batches logs into 1 second units, wraps the resulting payload in JSON, and uses the POST method to deliver the logs to the address of your log management service.
 
-To define a webhook `ClusterSink` resource with YAML and `kubectl`, perform the following steps:
+To define a webhook `ClusterLogSink` resource with YAML and `kubectl`, perform the following steps:
 
 1. Create a YAML file that specifies your log destination in the following format:
   
     ```
-    apiVersion: apps.pivotal.io/v1beta1
-    kind: ClusterSink
+    apiVersion: pksapi.io/v1beta1
+    kind: ClusterLogSink
     metadata:
       name: YOUR-SINK-NAME
     spec:
@@ -166,7 +168,7 @@ To define a webhook `ClusterSink` resource with YAML and `kubectl`, perform the 
 
 1. Save the YAML file with an appropriate file name. For example, `my-cluster-sink.yml`.
 
-1. Apply the `ClusterSink` resource to your cluster by running the following command:
+1. Apply the `ClusterLogSink` resource to your cluster by running the following command:
 
     ```
     kubectl apply -f MY-SINK.yml
@@ -179,19 +181,19 @@ To define a webhook `ClusterSink` resource with YAML and `kubectl`, perform the 
 
 ### <a id='define-namespace-sink'></a>Sink Resources
 
-A `Sink` resource filters logs by namespace within a cluster.
+A `LogSink` resource filters logs by namespace within a cluster.
 
 Currently, you can use only `kubectl` to create and manage namespace sinks.
 
-#### <a id='sink-kubectl'></a> Create a Sink Resource with YAML and kubectl
+#### <a id='sink-kubectl'></a> Create a Log Sink Resource with YAML and kubectl
 
-To define a `Sink` resource with YAML and `kubectl`, perform the following steps:
+To define a `LogSink` resource with YAML and `kubectl`, perform the following steps:
 
 1. Create a YAML file that specifies your log destination in the following format:
 
     ```
-    apiVersion: apps.pivotal.io/v1beta1
-    kind: Sink
+    apiVersion: pksapi.io/v1beta1
+    kind: LogSink
     metadata:
       name: YOUR-SINK
       namespace: YOUR-NAMESPACE
@@ -202,14 +204,16 @@ To define a `Sink` resource with YAML and `kubectl`, perform the following steps
       enable_tls: true
     ```
   Where:
-    * `YOUR-SINK` is a name you choose for your sink.
+    * `YOUR-SINK` is a name you choose for your log sink.
     * `YOUR-NAMESPACE` is the name of your namespace.
     * `YOUR-LOG-DESTINATION` is the URL or IP address of your log management service.
     * `YOUR-LOG-DESTINATION-PORT` is the port number of your log management service.
 
+  <p class="note"><strong>Note:</strong> <code>enable_tls</code> must be <code>true</code>.</p>
+  
 1. Save the YAML file with an appropriate file name. For example, `my-namespace-sink.yml`.
 
-1. Apply the `Sink` resource to your cluster by running the following command:
+1. Apply the `LogSink` resource to your cluster by running the following command:
 
     ```
     kubectl apply -f MY-SINK.yml
@@ -238,7 +242,7 @@ To define a `ClusterMetricSink` resource with YAML and `kubectl`, perform the fo
 1. Create a YAML file in the following format:
 
     ```
-    apiVersion: apps.pivotal.io/v1beta1
+    apiVersion: pksapi.io/v1beta1
     kind: ClusterMetricSink
     metadata:
       name: YOUR-SINK
@@ -255,7 +259,7 @@ To define a `ClusterMetricSink` resource with YAML and `kubectl`, perform the fo
     For example:
 
     ```
-    apiVersion: apps.pivotal.io/v1beta1
+    apiVersion: pksapi.io/v1beta1
     kind: ClusterMetricSink
     metadata:
       name: http
@@ -285,12 +289,12 @@ To define a `ClusterMetricSink` resource with YAML and `kubectl`, perform the fo
 
 To list sinks for clusters and namespaces, use the commands in the following sections.
 
-###<a id="cluster-sink-list"></a> ClusterSink Resources  
+###<a id="cluster-sink-list"></a> ClusterLogSink Resources  
 
 To list log sinks deployed to your cluster, run the following command:
 
 ```
-pks sinks CLUSTER-NAME
+pks logsinks CLUSTER-NAME
 ```
 
 Where `CLUSTER-NAME` corresponds to the name of your cluster.
@@ -298,7 +302,7 @@ Where `CLUSTER-NAME` corresponds to the name of your cluster.
 Alternately, you can use `kubectl`:
 
 ```
-kubectl get clustersinks
+kubectl get clusterlogsinks
 ``` 
 
 ### <a id="sink-list"></a> Sink Resources
@@ -306,7 +310,7 @@ kubectl get clustersinks
 To list namespace log sinks, run the following command:
 
 ```
-kubectl get sinks
+kubectl get logsinks
 ``` 
 
 ### <a id="metric-sink-list"></a> ClusterMetricSink Resources
@@ -321,7 +325,7 @@ kubectl get clustermetricsinks
 
 To delete sinks for clusters and namespaces, use the commands in the following sections.
 
-### <a id='cluster-sink-delete'></a> ClusterSink Resources
+### <a id='cluster-sink-delete'></a> ClusterLogSink Resources
 
 To delete all log sinks deployed to your cluster, run the following command:
 
@@ -344,7 +348,7 @@ Where:
 Alternately, you can use `kubectl`:
 
 ```
-kubectl delete clustersink YOUR-SINK
+kubectl delete clusterlogsink YOUR-SINK
 ``` 
 
 Where `YOUR-SINK` is the name of your sink.  
@@ -354,10 +358,10 @@ Where `YOUR-SINK` is the name of your sink.
 To delete a namespace log sink, run the following command:
 
 ```
-kubectl delete sink YOUR-SINK
+kubectl delete logsink YOUR-SINK
 ``` 
 
-Where `YOUR-SINK` is the name of your sink.
+Where `YOUR-SINK` is the name of your logsink.
 
 ### <a id="metric-sink-delete"></a> ClusterMetricSink Resources
 

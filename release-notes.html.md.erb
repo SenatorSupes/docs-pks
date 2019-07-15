@@ -290,3 +290,17 @@ In <%= vars.product_short %> v1.5, operators can configure prefixes for OIDC use
 If you add OIDC prefixes you must manually change any existing role bindings that bind to a username or group.
 If you do not change your role bindings, developers cannot access Kubernetes clusters.
 For instructions about creating a role binding, see [Managing Cluster Access and Permissions](./manage-cluster-permissions.html).
+
+#### <a name='sink-changes'></a> Existing Sink Configuration files Must be Modified to Support v1.5
+
+Existing Sink configuration files must be changed to be used in <%= vars.product_short %> v1.5:
+* The `enable_tls` property must always be `true`
+* The group name property in the header line of every sink configuration YAML file must be changed 
+from `apps.pivotal.io` to `pksapi.io`. For example, the existing `apiVersion: apps.pivotal.io/v1beta1` 
+header lines must be changed to: `apiVersion: pksapi.io/v1beta1`.
+* The `sink` resource name is no longer supported and has been replaced with `logsink`. 
+Existing `kind: sink` key pairs in Sink configuration files must be changed to: `kind: logsink`.
+* The `clustersink` resource name is no longer supported and has been replaced with `clusterlogsink`. 
+Existing `kind: clustersink` key pairs in Sink configuration files must be changed to: `kind: clusterlogsink`.
+
+For more information on the current sink configuration format, see [Creating Sink Resources](create-sinks.html).
