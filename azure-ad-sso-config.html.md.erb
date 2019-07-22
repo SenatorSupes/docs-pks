@@ -18,75 +18,78 @@ To configure Azure AD as a SAML identity provider for  <%= vars.product_short %>
 
 1. Log in to Azure AD as a global admin.
 
-2. Navigate to **Azure Active Directory** tab > **Enterprise application**.
+2. Navigate to **Azure Active Directory**.
  
- 	[IMAGE]
+ 	![Azure Active Directory button](images/azure-ad-button.png)
+	
+1. Click **Enterprise application**.
+
+	![Enterprise application button](images/azure-ad-add-app.png)
 
 3. Select **Non-gallery application**. Provide a name and click **Add**.
 
-	[IMAGE]
-
+	![Non-gallery application button](images/azure-ad-non-gallery.png)
+	
 1. Navigate to **Azure Active Directory** > **Enterprise applications**.
 
-	[IMAGE]
+	![Enterprise applications tab](images/azure-ad-app-tab.png)
 
-1. Click your application and then click the **Single sign-on** tab.  
+1. Click your app and then click the **Single sign-on**.  
 
-1. Save the link address of the **App Federation Metadata Url**.
+	![Single sign-on tab](images/azure-ad-sso-button.png)
+	
+1. Select **SAML**.
+	![Single sign-on pane](images/azure-ad-saml.png)
+	
+	or
+	
+	![Set up SAML pane](images/azure-ad-set-up-saml.png)
+1. Under **Basic SAML Configuration**, configure the following fields:
+		<%# MENTION POPOUT %>
+	![Basic SAML Configuration pane](images/azure-ad-basic-saml.png)
+	
+	<table>
+		<tr>
+			<th>Field</th>
+			<th>Instructions</th>
+		</tr>
+		
+		<tr>
+			<td><strong>Identifier (Entity ID)</strong></td>
+			<td>The default identifier will be the audience of the SAML response for IDP-initiated SSO</td>
+		</tr>
+		
+		<tr>
+			<td><strong>Reply URL</strong></td>
+			<td>The default reply URL will be the destination in the SAML response for IDP-initiated SSO</td>
+		</tr>
+		
+		<tr>
+			<td><strong>Sign on URL</strong></td>
+			<td>This URL contains the sign-in page for this application that will perform the service provider-initiated single sign-on. Leave it blank if you want to perform identity provider initiated single sign-on.</td>
+		</tr>
+	</table>
+		
+1. Under **User Attributes & Claims**, configure the following fields:
+		<%# MENTION POP-OUT. THESE COULD EITHER BE DEFAULT OR CONFIGURED DEPENDING ON THE USER'S PREFERENCE. MAKE CLAIMS HERE %> 
+		
+		
 
-2. Record the **App Federation Metadata Url**. 
+1. Under **SAML Signing Certificate**, configure the following fields:
+		<%#MENTION POPOUT. THESE COULD EITHER BE DEFAULT OR CONFIGURED DEPENDING ON THE USER'S PREFERENCE . I THINK NOTIFICATION EMAIL IS THE ONLY REVALENT ONE? MAYBE SIGNING ALGOTHIYM%> 
 
-1. Provide a **Notification Email** and click **Save**.
 
-	[IMAGE]
-
-3. Navigate to **Users and groups** tab and then click **Add User** .
+3. Navigate to **Users and groups** and then click **Add User** . (SOMETHING ABOUT YOUR APP)
 
 	[IMAGE]
 
 5. Select users or group names from the dropdown. For example, you can add a group that includes all 
-users that should be able to login to the SSO plan.
+users that should be able to login to the SSO plan. (SOMETHING ABOUT USERS AND GROUPS POPOUT)
 
 	[IMAGE]
 	
-## <a id='claims'></a>  Configure Claims Mapping
-
-1. Navigate to **Azure Active Directory** > **App registration**. Click your application.
-	
-	[IMAGE]
-	
-1. To enable user attribute mappings, do the following:
-
-	1. Select the **View and edit all other user attributes** checkbox under the **User Attributes** header. 
-	1. Modify the attributes. 
-	
-	For more information, see 
-	[How to: Customize claims issued in the SAML token for enterprise applications](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-saml-claims-customization).
-
-	[IMAGE]
-	
-2. To pass group membership claims to the application, do the following:
-	1. Click **Manifest**.
-	2. Locate `groupMembershipClaims` and set the value to one of the following:
-		- `SecurityGroup`. Groups claim will contain identifiers of all security 
-		groups of which the user is a member.
-		- `All`. Groups claim will contain the identifiers of all security 
-		groups and distribution lists of which the user is a member.
-	4. Save the change.
-		
-	For more information, see 
-	[How to: Customize claims issued in the SAML token for enterprise applications](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-saml-claims-customization).
-	
-	[IMAGE]
-	
-1. Navigate to **Azure Active Directory** > **Groups**. 
-
-1. For each group that is used by the SSO plan, record the **Object ID**. Azure AD will pass the
-	Object ID of these groups to the SSO plan. For more information,
-
-	[IMAGE]
-
-
 1. Use the Azure AD metadata you retrieved in the above step to configure SAML in the <%= vars.product_tile %> tile.
 See
 [Configure SAML as an Identity Provider](installing-pks-azure.html#configure-saml).
+
+<%#PROBS MISSING STEPS FOR USERS AND GROUPS%>
