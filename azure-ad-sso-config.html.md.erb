@@ -8,7 +8,7 @@ This topic explains how to configure single sign-on (SSO) between Azure Active D
 ## <a id='prerequisites'></a> Prerequisites
 
 To configure Azure AD to designate <%= vars.product_short %> as a service provider,
-you must have the following:
+you must an Azure AD Global Administrator. 
 
 
 ## <a id='configure-saml'></a> Configure SAML in Azure AD
@@ -16,37 +16,31 @@ you must have the following:
 To configure Azure AD as a SAML identity provider for  <%= vars.product_short %>, do
 	the following:
 
-1. Log in to Azure AD as a global admin.
+1. Log in to Azure AD as a Global Administrator.
 
 2. Navigate to **Azure Active Directory**.
- 
- 	![Azure Active Directory button](images/azure-ad-button.png)
 	
-1. Click **Enterprise application**.
+1. Under **Create**, click **Enterprise application**.
 
 	![Enterprise application button](images/azure-ad-add-app.png)
 
-3. Select **Non-gallery application**. Provide a name and click **Add**.
+3. Under **Add your own app**, select **Non-gallery application**. Enter a **Name** and click **Add**.
 
-	![Non-gallery application button](images/azure-ad-non-gallery.png)
-	
 1. Navigate to **Azure Active Directory** > **Enterprise applications**.
 
 	![Enterprise applications tab](images/azure-ad-app-tab.png)
 
-1. Click your app and then click the **Single sign-on**.  
+1. Click your app and then click **Single sign-on**.  
 
 	![Single sign-on tab](images/azure-ad-sso-button.png)
 	
-1. Select **SAML**.
+1. Under **Select a single sign-on method**, select **SAML**.
 	![Single sign-on pane](images/azure-ad-saml.png)
 	
-	or
-	
-	![Set up SAML pane](images/azure-ad-set-up-saml.png)
-1. Under **Basic SAML Configuration**, configure the following fields:
-		<%# MENTION POPOUT %>
-	![Basic SAML Configuration pane](images/azure-ad-basic-saml.png)
+1. Under **Set up Single Sign-On with SAML**, click the pencil icon for **Basic SAML Configuration**.
+	 ![Basic SAML Configuration button](images/azure-ad-basic-saml-edit.png)
+
+1. Configure the following fields:
 	
 	<table>
 		<tr>
@@ -56,40 +50,37 @@ To configure Azure AD as a SAML identity provider for  <%= vars.product_short %>
 		
 		<tr>
 			<td><strong>Identifier (Entity ID)</strong></td>
-			<td>The default identifier will be the audience of the SAML response for IDP-initiated SSO</td>
+			<td>Enter <code>PKS-API:8443</code>.<br>
+				For example: <code>api.pks.example.com:8443</code></td>
 		</tr>
 		
 		<tr>
 			<td><strong>Reply URL</strong></td>
-			<td>The default reply URL will be the destination in the SAML response for IDP-initiated SSO</td>
+			<td>Enter <code>https<span>:</span>//PKS-API:8443/saml/SSO/alias/PKS-API<span>:</span>8443</code>.
+				<br>For example:
+				<code>https<span>:</span>//api.pks.example.com<span>:</span>8443/saml/SSO/alias/api.pks.example.com<span>:</span>8443</code></td>
 		</tr>
 		
 		<tr>
 			<td><strong>Sign on URL</strong></td>
-			<td>This URL contains the sign-in page for this application that will perform the service provider-initiated single sign-on. Leave it blank if you want to perform identity provider initiated single sign-on.</td>
+			<td>Enter <code>https<span>:</span>//PKS-API:8443/saml/SSO/alias/PKS-API<span>:</span>8443</code>.
+				<br>For example:
+				<code>https<span>:</span>//api.pks.example.com<span>:</span>8443/saml/SSO/alias/api.pks.example.com<span>:</span>8443</code></td>
 		</tr>
 	</table>
-		
-1. Under **User Attributes & Claims**, configure the following fields:
-		<%# MENTION POP-OUT. THESE COULD EITHER BE DEFAULT OR CONFIGURED DEPENDING ON THE USER'S PREFERENCE. MAKE CLAIMS HERE %> 
-		
-		
-
-1. Under **SAML Signing Certificate**, configure the following fields:
-		<%#MENTION POPOUT. THESE COULD EITHER BE DEFAULT OR CONFIGURED DEPENDING ON THE USER'S PREFERENCE . I THINK NOTIFICATION EMAIL IS THE ONLY REVALENT ONE? MAYBE SIGNING ALGOTHIYM%> 
-
-
-3. Navigate to **Users and groups** and then click **Add User** . (SOMETHING ABOUT YOUR APP)
-
-	[IMAGE]
-
-5. Select users or group names from the dropdown. For example, you can add a group that includes all 
-users that should be able to login to the SSO plan. (SOMETHING ABOUT USERS AND GROUPS POPOUT)
-
-	[IMAGE]
 	
-1. Use the Azure AD metadata you retrieved in the above step to configure SAML in the <%= vars.product_tile %> tile.
+	<p class="note"><strong>Note:</strong> Pivotal recommends using the default
+		settings for the fields that are not referenced in the above table.</p>
+		
+1. Click the pencil icon for **User Attributes & Claims**.
+		![Basic SAML Configuration button](images/azure-ad-user-claims.png)
+		
+1. Configure your user attributes and claims by doing the procedures in [How to: Customize claims issued in the SAML token for enterprise applications](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-saml-claims-customization) in the Microsoft Azure documentation. By default, <%= vars.product_short %> uses the <code>EmailAddress</code> name identifier format.  
+
+1. Configure your group attributes and claims by doing the procedures in [Configure group claims for SAML applications using SSO configuration](https://docs.microsoft.com/en-us/azure/active-directory/hybrid/how-to-connect-fed-group-claims#configure-group-claims-for-saml-applications-using-sso-configuration) in the Microsoft Azure documentation. 
+
+1. Under **SAML Signing Certificate**, copy and save the link address for **App Federation Metadata Url** or download **Federation Metadata XML**. You use the Azure AD metadata to configure SAML in the <%= vars.product_tile %> tile.
 See
 [Configure SAML as an Identity Provider](installing-pks-azure.html#configure-saml).
 
-<%#PROBS MISSING STEPS FOR USERS AND GROUPS%>
+	![SAML Signing Certificate pane](images/azure-ad-metadata.png)
